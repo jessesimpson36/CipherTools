@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/atbash"
+            android:title="@string/atbash" />
+        <item
+            android:id="@+id/caesarian_shift"
+            android:title="@string/caesarian_shift" />
+
+        <item
+            android:id="@+id/morse_code"
+            android:title="@string/morse_code" />
+
+        <item
+            android:id="@+id/skip"
+            android:title="@string/skip" />
+
+    </group>
+
+</menu>
