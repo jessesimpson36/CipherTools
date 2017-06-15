@@ -9,4 +9,8 @@
     <string name="morse_code">Morse Code</string>
     <string name="caesarian_shift">Caesarian Shift</string>
     <string name="atbash">Atbash</string>
+    <string name="decrypt">Decrypt</string>
+    <string name="encrypt">Encrypt</string>
+
+
 </resources>

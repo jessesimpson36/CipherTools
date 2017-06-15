@@ -117,5 +117,43 @@ public class BasicCiphers {
 
     }
 
+    /**
+     * takes a message either in morse code or from morse code and translates it the other way.
+     * @param isMorse whether it is morse or not.
+     * @param message the input
+     * @return
+     */
+    public static String morseCode( boolean isMorse, String message ){
+        String[] alpha = { " ", "1", "2", "3", "4", "5", "6", "7", "8",
+                "9", "0","b", "c","f","h", "j", "l",  "p", "q", "v", "x",
+                "y", "z", "u", "w", "g", "d", "k", "o", "r", "s", "a", "i",
+                "m", "n", "t", "e" };
+
+        String[] dottie = { "/ ", ".---- ", "..--- ", "...-- ", "....- ", "..... ",
+                "-.... ", "--... ", "---.. ", "----. ", "----- ",
+
+                //b      c        f        h       j      l         p      q       v         x      y       z
+                "-... ","-.-. ", "..-. ",".... ",".--- ",".-.. ",".--. ","--.- ", "...- ","-..- ","-.-- ","--.. ",
+
+                //u       w        g      d        k      o     r         s
+                "..- ",  ".-- ", "--. ", "-.. ", "-.- ","--- ",".-. ", "... ",
+                //a      i      m      n
+                ".- ", ".. ", "-- ", "-. ",
+                // t      e
+                  "- ", ". " };
+
+        if( !isMorse ){
+            for( int i = 0; i < alpha.length; i++ ){
+                message = message.toLowerCase().replaceAll(alpha[i], dottie[i]);
+            }
+        } else {
+            message = message.trim() + " ";
+            for( int i = 0; i < alpha.length; i++ ){
+                message = message.toLowerCase().replaceAll(dottie[i], alpha[i]);
+            }
+        }
+        return message;
+    }
+
 
 }

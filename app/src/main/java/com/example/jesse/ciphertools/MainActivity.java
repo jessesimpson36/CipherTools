@@ -12,8 +12,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
@@ -21,7 +24,40 @@ import android.support.v7.widget.ShareActionProvider;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    /**
+     * saves the menu for the sake of the share function.
+     */
     private Menu savedMenu;
+
+    /**
+     * the encrypt radio button
+     */
+    private RadioButton encrypt;
+
+    /**
+     * the decrypt radio button
+     */
+    private RadioButton decrypt;
+
+    /**
+     * the input text box.
+     */
+    private EditText input;
+
+    /**
+     * the output text box
+     */
+    private EditText output;
+
+    /**
+     * the selected menu.
+     */
+    private int selectedMenu;
+
+    /**
+     * this is the spinner controlling the caesarian shift.
+     */
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +65,23 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // initialize variables.
+        output = (EditText) findViewById( R.id.output );
+        input = (EditText) findViewById( R.id.input );
+
+        selectedMenu = R.id.atbash;
+
+        encrypt = (RadioButton) findViewById(R.id.encryptButton);
+        decrypt = (RadioButton) findViewById(R.id.decryptButton);
+        encrypt.setVisibility(View.INVISIBLE);
+        decrypt.setVisibility(View.INVISIBLE);
+
+        spinner = (Spinner) findViewById( R.id.caesarSpinner );
+        spinner.setVisibility(View.INVISIBLE);
+
+
+        // end of manual initialization.
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -39,6 +92,32 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //sets default to atbash and checks the menu item.
+        navigationView.getMenu().getItem(0).setChecked(true);
+        setUpAtBash();
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.caesarValues, android.R.layout.simple_spinner_item);
+
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // your code here
+                updateCaesarText();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
 
     }
 
@@ -75,139 +154,56 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        selectedMenu = item.getItemId();
 
-        // makes the texts invisible unless its necessary.
-        if (id != R.id.caesarian_shift){
+        /*
+         * sets up the layouts.
+         */
+        setUp();
 
-            EditText output = (EditText) findViewById(R.id.output);
-            output.setVisibility(View.VISIBLE);
+        // updates the output
+        updateOutput();
 
-            TextView caesar_5 = (TextView) findViewById(R.id.caesarText_5);
-            TextView caesar_4 = (TextView) findViewById(R.id.caesarText_4);
-            TextView caesar_3 = (TextView) findViewById(R.id.caesarText_3);
-            TextView caesar_2 = (TextView) findViewById(R.id.caesarText_2);
-            TextView caesar_1 = (TextView) findViewById(R.id.caesarText_1);
-            TextView caesar0 = (TextView) findViewById(R.id.caesarText0);
-            TextView caesar1 = (TextView) findViewById(R.id.caesarText1);
-            TextView caesar2 = (TextView) findViewById(R.id.caesarText2);
-            TextView caesar3 = (TextView) findViewById(R.id.caesarText3);
-            TextView caesar4 = (TextView) findViewById(R.id.caesarText4);
-            TextView caesar5 = (TextView) findViewById(R.id.caesarText5);
-
-            caesar_5.setText("");
-            caesar_4.setText("");
-            caesar_3.setText("");
-            caesar_2.setText("");
-            caesar_1.setText("");
-            caesar0.setText("");
-            caesar1.setText("");
-            caesar2.setText("");
-            caesar3.setText("");
-            caesar4.setText("");
-            caesar5.setText("");
-        }
-
-        if (id == R.id.atbash) {
-
-            EditText input = (EditText) findViewById(R.id.input);
-            EditText output = (EditText) findViewById(R.id.output);
-
-            // this is where the text will be translated.
-            input.addTextChangedListener(new TextWatcher() {
-
-                EditText input = (EditText) findViewById(R.id.input);
-                EditText output = (EditText) findViewById(R.id.output);
-
-                @Override
-                public void afterTextChanged(Editable s) {}
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start,
-                                              int count, int after) {}
-
-                // this is where the text will be translated.
-                @Override
-                public void onTextChanged(CharSequence s, int start,
-                                          int before, int count) {
-                    // get the input string and chop it up to smaller strings.
-                    String inputString = input.getText().toString();
-
-                    output.setText(BasicCiphers.translateAtbash(inputString));
-
-                    updateShare();
-                }
-
-            });
-
-
-        } else if (id == R.id.caesarian_shift) {
-
-
-            EditText input = (EditText) findViewById(R.id.input);
-            EditText output = (EditText) findViewById(R.id.output);
-            output.setVisibility(View.INVISIBLE);
-
-
-            // this is where the text will be translated.
-            input.addTextChangedListener(new TextWatcher() {
-
-                EditText input = (EditText) findViewById(R.id.input);
-
-                @Override
-                public void afterTextChanged(Editable s) {}
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start,
-                                              int count, int after) {}
-
-                // this is where the text will be translated.
-                @Override
-                public void onTextChanged(CharSequence s, int start,
-                                          int before, int count) {
-                    // get the input string and chop it up to smaller strings.
-                    String inputString = input.getText().toString();
-
-                    TextView caesar_5 = (TextView) findViewById(R.id.caesarText_5);
-                    TextView caesar_4 = (TextView) findViewById(R.id.caesarText_4);
-                    TextView caesar_3 = (TextView) findViewById(R.id.caesarText_3);
-                    TextView caesar_2 = (TextView) findViewById(R.id.caesarText_2);
-                    TextView caesar_1 = (TextView) findViewById(R.id.caesarText_1);
-                    TextView caesar0 = (TextView) findViewById(R.id.caesarText0);
-                    TextView caesar1 = (TextView) findViewById(R.id.caesarText1);
-                    TextView caesar2 = (TextView) findViewById(R.id.caesarText2);
-                    TextView caesar3 = (TextView) findViewById(R.id.caesarText3);
-                    TextView caesar4 = (TextView) findViewById(R.id.caesarText4);
-                    TextView caesar5 = (TextView) findViewById(R.id.caesarText5);
-
-                    caesar_5.setText("Shifted Left 5 Times: " + BasicCiphers.caesarianShift(-5, inputString ));
-                    caesar_4.setText("Shifted Left 4 Times: " + BasicCiphers.caesarianShift(-4, inputString ));
-                    caesar_3.setText("Shifted Left 3 Times: " + BasicCiphers.caesarianShift(-3, inputString ));
-                    caesar_2.setText("Shifted Left 2 Times: " + BasicCiphers.caesarianShift(-2, inputString ));
-                    caesar_1.setText("Shifted Left 1 Time: " + BasicCiphers.caesarianShift(-1, inputString ));
-                    caesar0.setText("Original Message: " + BasicCiphers.caesarianShift(0, inputString ));
-                    caesar1.setText("Shifted Right 1 Time: " + BasicCiphers.caesarianShift(1, inputString ));
-                    caesar2.setText("Shifted Right 2 Times: " + BasicCiphers.caesarianShift(2, inputString ));
-                    caesar3.setText("Shifted Right 3 Times: " + BasicCiphers.caesarianShift(3, inputString ));
-                    caesar4.setText("Shifted Right 4 Times: " + BasicCiphers.caesarianShift(4, inputString ));
-                    caesar5.setText("Shifted Right 5 Times: " + BasicCiphers.caesarianShift(5, inputString ));
-
-
-                }
-
-            });
-
-        } else if (id == R.id.morse_code) {
-
-        } else if (id == R.id.skip) {
-
-        }
-
+        /*
+         * deals with the drawers.
+         */
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
+    /**
+     * handles the radio buttons.
+     * @param view the view
+     */
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.encryptButton:
+                if (checked) {
+                    decrypt.setChecked(false);
+                    encrypt.setChecked(true);
+                    setUp();
+                    updateOutput();
+                }
+                break;
+            case R.id.decryptButton:
+                if (checked) {
+                    encrypt.setChecked(false);
+                    decrypt.setChecked(true);
+                    setUp();
+                    updateOutput();
+                }
+                break;
+        }
+    }
+
+    /**
+     * updates the share functionality.
+     */
     private void updateShare(){
         MenuItem item = savedMenu.findItem(R.id.shareButton);
         EditText output = (EditText) findViewById(R.id.output);
@@ -221,6 +217,150 @@ public class MainActivity extends AppCompatActivity
 
         //then set the sharingIntent
         mShareActionProvider.setShareIntent(sharingIntent);
+    }
+
+
+    /**
+     * sets up the atbash layout.
+     */
+    private void setUpAtBash(){
+        // this is where the text will be translated.
+        input.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {}
+
+            // this is where the text will be translated.
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                // get the input string and chop it up to smaller strings.
+                String inputString = input.getText().toString();
+
+                output.setText(BasicCiphers.translateAtbash(inputString));
+                updateShare();
+            }
+
+        });
+    }
+
+    /**
+     * sets up the caesarian shift operation
+     */
+    private void setUpCaesarianShift(){
+        // this is where the text will be translated.
+        input.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {}
+
+            // this is where the text will be translated.
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                // get the input string and chop it up to smaller strings.
+                String inputString = input.getText().toString();
+                updateCaesarText();
+                updateShare();
+            }
+
+        });
+    }
+
+    /**
+     * updates the caesar text.
+     */
+    private void updateCaesarText(){
+        if (decrypt.isChecked()) {
+            output.setText(BasicCiphers.caesarianShift(Integer.valueOf(spinner.getSelectedItem().toString()).intValue() * -1, input.getText().toString()));
+        } else {
+            output.setText(BasicCiphers.caesarianShift(Integer.valueOf(spinner.getSelectedItem().toString()).intValue(), input.getText().toString()));
+        }
+    }
+
+    /**
+     * sets up the morse encoder.
+     */
+    private void setUpMorse(){
+        // this is where the text will be translated.
+        input.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {}
+
+            // this is where the text will be translated.
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                // get the input string and chop it up to smaller strings.
+                String inputString = input.getText().toString().toLowerCase();
+
+                if (decrypt.isChecked()) {
+                    output.setText(BasicCiphers.morseCode(true, inputString));
+                } else {
+                    output.setText(BasicCiphers.morseCode(false, inputString));
+                }
+                updateShare();
+            }
+
+        });
+    }
+
+    /**
+     * updates the output text.
+     */
+    private void updateOutput(){
+        if ( selectedMenu == R.id.atbash ){
+            output.setText(BasicCiphers.translateAtbash(input.getText().toString()));
+        } else if ( selectedMenu == R.id.caesarian_shift ){
+            updateCaesarText();
+        } else if ( selectedMenu == R.id.morse_code ){
+            if ( decrypt.isChecked() ){
+                output.setText(BasicCiphers.morseCode(true, input.getText().toString()));
+            } else {
+                output.setText(BasicCiphers.morseCode(false, input.getText().toString()));
+            }
+        } else if ( selectedMenu == R.id.skip ){
+
+        }
+        updateShare();
+    }
+
+    /**
+     * figures out which menu to set up.
+     */
+    private void setUp(){
+
+        if (selectedMenu == R.id.atbash) {
+            setUpAtBash();
+        } else if (selectedMenu == R.id.caesarian_shift) {
+            setUpCaesarianShift();
+            spinner.setVisibility(View.VISIBLE);
+            decrypt.setVisibility(View.VISIBLE);
+            encrypt.setVisibility(View.VISIBLE);
+        } else if (selectedMenu == R.id.morse_code) {
+            spinner.setVisibility(View.INVISIBLE);
+            decrypt.setVisibility(View.VISIBLE);
+            encrypt.setVisibility(View.VISIBLE);
+            setUpMorse();
+        } else if (selectedMenu == R.id.skip) {
+            spinner.setVisibility(View.INVISIBLE);
+            decrypt.setVisibility(View.INVISIBLE);
+            encrypt.setVisibility(View.INVISIBLE);
+
+        }
     }
 
 

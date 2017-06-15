@@ -4,17 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.jesse.ciphertools.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/white"
         android:fillViewport="false"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,10 +45,13 @@
                     android:id="@+id/input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:ems="10"
                     android:hint="Input"
                     android:inputType="textMultiLine"
                     android:textSize="25sp" />
+
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
@@ -45,136 +62,58 @@
                     android:id="@+id/output"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:ems="10"
                     android:hint="Output"
                     android:inputType="textMultiLine|textPersonName"
                     android:textSize="25sp" />
+
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:layout_gravity="center">
 
-                <TextView
-                    android:id="@+id/caesarText_5"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp" />
-            </android.support.v7.widget.CardView>
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    <Spinner
+                        android:id="@+id/caesarSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="75dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1" />
 
-                <TextView
-                    android:id="@+id/caesarText_4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="" />
-            </android.support.v7.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                        <RadioButton
+                            android:id="@+id/encryptButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:onClick="onRadioButtonClicked"
+                            android:text="@string/encrypt" />
 
-                <TextView
-                    android:id="@+id/caesarText_3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text=""
-                    tools:text="" />
-            </android.support.v7.widget.CardView>
+                        <RadioButton
+                            android:id="@+id/decryptButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:onClick="onRadioButtonClicked"
+                            android:text="@string/decrypt" />
+                    </LinearLayout>
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/caesarText_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text=""
-                    tools:text="" />
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/caesarText_1"
-                    android:layout_width="wrap_content"
-                    android:textSize="20sp"
-                    android:layout_height="wrap_content" />
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/caesarText0"
-                    android:layout_width="wrap_content"
-                    android:textSize="20sp"
-                    android:layout_height="wrap_content" />
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/caesarText1"
-                    android:layout_width="wrap_content"
-                    android:textSize="20sp"
-                    android:layout_height="wrap_content" />
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/caesarText2"
-                    android:layout_width="wrap_content"
-                    android:textSize="20sp"
-                    android:layout_height="wrap_content" />
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/caesarText3"
-                    android:layout_width="wrap_content"
-                    android:textSize="20sp"
-                    android:layout_height="wrap_content" />
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/caesarText4"
-                    android:layout_width="wrap_content"
-                    android:textSize="20sp"
-                    android:layout_height="wrap_content" />
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/caesarText5"
-                    android:layout_width="wrap_content"
-                    android:textSize="20sp"
-                    android:layout_height="wrap_content" />
             </android.support.v7.widget.CardView>
 
         </LinearLayout>
