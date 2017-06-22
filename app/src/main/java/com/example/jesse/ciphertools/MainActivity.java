@@ -266,9 +266,34 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
+                updateCaesarText();
+                updateShare();
+            }
+
+        });
+    }
+
+    /**
+     * sets up the rot 13 cipher.
+     */
+    private void setUpRot13(){
+        // this is where the text will be translated.
+        input.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {}
+
+            // this is where the text will be translated.
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
                 // get the input string and chop it up to smaller strings.
                 String inputString = input.getText().toString();
-                updateCaesarText();
+                output.setText(BasicCiphers.caesarianShift(13 , input.getText().toString()));
                 updateShare();
             }
 
@@ -326,6 +351,8 @@ public class MainActivity extends AppCompatActivity
             output.setText(BasicCiphers.translateAtbash(input.getText().toString()));
         } else if ( selectedMenu == R.id.caesarian_shift ){
             updateCaesarText();
+        } else if (selectedMenu == R.id.rot_13){
+            output.setText(BasicCiphers.caesarianShift(13 , input.getText().toString()));
         } else if ( selectedMenu == R.id.morse_code ){
             if ( decrypt.isChecked() ){
                 output.setText(BasicCiphers.morseCode(true, input.getText().toString()));
@@ -355,7 +382,13 @@ public class MainActivity extends AppCompatActivity
             decrypt.setVisibility(View.VISIBLE);
             encrypt.setVisibility(View.VISIBLE);
             setUpMorse();
-        } else if (selectedMenu == R.id.skip) {
+        } else if (selectedMenu == R.id.rot_13){
+            spinner.setVisibility(View.INVISIBLE);
+            decrypt.setVisibility(View.INVISIBLE);
+            encrypt.setVisibility(View.INVISIBLE);
+            setUpRot13();
+
+        } else if (selectedMenu == R.id.skip){
             spinner.setVisibility(View.INVISIBLE);
             decrypt.setVisibility(View.INVISIBLE);
             encrypt.setVisibility(View.INVISIBLE);

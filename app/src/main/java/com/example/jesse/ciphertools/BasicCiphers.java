@@ -29,20 +29,8 @@ public class BasicCiphers {
 //        // gets the input
 //        Scanner input = new Scanner( System.in );
 //
-//        // processes the encoded message.
-//        switch( input.next() ){
-//            case "atbash":
-//                System.out.println( translateAtbash(input.nextLine().toUpperCase()));
-//                break;
+//        System.out.println(morseCode(  input.next().contains("y") , input.nextLine()  )  );
 //
-//            case "CaesarianShift":
-//                System.out.println( caesarianShift(input.nextInt(), input.nextLine()) );
-//                break;
-//
-//            case "skip":
-//                System.out.println(skip(input.nextInt(), input.nextInt(), input.nextLine()));
-//                break;
-//        }
 //    }
 
     /**
@@ -142,17 +130,32 @@ public class BasicCiphers {
                 // t      e
                   "- ", ". " };
 
+        String[] dottieReg = { "/ ", "\\.---- ", "\\.\\.--- ", "\\.\\.\\.-- ", "\\.\\.\\.\\.- ", "\\.\\.\\.\\.\\. ",
+                "-\\.\\.\\.\\. ", "--\\.\\.\\. ", "---\\.\\. ", "----\\. ", "----- ",
+
+                //b      c        f        h       j      l         p      q       v         x      y       z
+                "-\\.\\.\\. ","-\\.-\\. ", "\\.\\.-. ","\\.\\.\\.\\. ","\\.--- ","\\.-\\.\\. ","\\.--\\. ","--\\.- ", "\\.\\.\\.- ","-\\.\\.- ","-\\.-- ","--\\.\\. ",
+
+                //u       w        g      d        k      o     r         s
+                "\\.\\.- ",  "\\.-- ", "--\\. ", "-\\.\\. ", "-\\.- ","--- ","\\.-\\. ", "\\.\\.\\. ",
+                //a      i      m      n
+                "\\.- ", "\\.\\. ", "-- ", "-\\. ",
+                // t      e
+                "- ", "\\. " };
+
         if( !isMorse ){
             for( int i = 0; i < alpha.length; i++ ){
                 message = message.toLowerCase().replaceAll(alpha[i], dottie[i]);
             }
         } else {
             message = message.trim() + " ";
-            for( int i = 0; i < alpha.length; i++ ){
-                message = message.toLowerCase().replaceAll(dottie[i], alpha[i]);
+            for( int i = 1; i < alpha.length; i++ ){
+                message = message.toLowerCase().replaceAll(dottieReg[i], alpha[i]);
             }
+            message = message.toLowerCase().replaceAll(dottieReg[0], alpha[0]);
+
         }
-        return message;
+        return message.toUpperCase();
     }
 
 

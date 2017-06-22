@@ -16,6 +16,11 @@
             android:title="@string/morse_code" />
 
         <item
+            android:id="@+id/rot_13"
+            android:title="ROT-13"
+            />
+
+        <item
             android:id="@+id/skip"
             android:title="@string/skip" />
 
