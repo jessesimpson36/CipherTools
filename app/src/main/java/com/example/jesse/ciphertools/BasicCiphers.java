@@ -1,6 +1,5 @@
 package com.example.jesse.ciphertools;
 
-import java.util.Scanner;
 
 /**
  * this translates to and from different ciphers
@@ -84,22 +83,38 @@ public class BasicCiphers {
     /**
      * this makes the message decode by skipping some amount of letters
      * and wrapping the message around until all characters are read.
-     * @param bypass the amount of letters to bypass
+     * @param isEncrypted whether the message is encrypted or not.
      * @param skipVal the amount of spaces to skip
      * @param message the message to encode or decode.
      * @return the new string, decoded or encoded.
      */
-    public static String skip( int bypass, int skipVal, String message ){
+    public static String skip( boolean isEncrypted, int skipVal, String message ){
 
         int length = message.length();
         char[] returned = message.toCharArray();
+        boolean[] letterUsed = new boolean[message.length()];
 
-        int index = bypass;
-        for( int i = 0; i < length; i++){
-            returned[index] = message.charAt(i);
+        int index = 0;
+
+        for (int i = 0; i < length; i++) {
+            // this while loop accounts for if the letter is being used.
+            // if it is, it finds the next open space.
+            while (letterUsed[index]) {
+                index++;
+                if (index >= length) {
+                    index = 0;
+                }
+            }
+            if (!isEncrypted) {
+                returned[index] = message.charAt(i);
+            } else {
+                returned[i] = message.charAt(index);
+            }
+            letterUsed[index] = true;
             index += skipVal;
             index = index % length;
         }
+
         String b = new String(returned);
         return b;
 

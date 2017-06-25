@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // your code here
-                updateCaesarText();
+                setUp();
             }
 
             @Override
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+//        int id = item.getItemId();
 
 
         return super.onOptionsItemSelected(item);
@@ -344,6 +344,38 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
+     * sets up the skip cipher.
+     */
+    private void setUpSkip(){
+        // this is where the text will be translated.
+        input.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {}
+
+            // this is where the text will be translated.
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                // get the input string and chop it up to smaller strings.
+                String inputString = input.getText().toString().toLowerCase();
+
+                if (decrypt.isChecked()) {
+                    output.setText(BasicCiphers.skip(true, Integer.valueOf(spinner.getSelectedItem().toString()) , inputString));
+                } else {
+                    output.setText(BasicCiphers.skip(false, Integer.valueOf(spinner.getSelectedItem().toString()) , inputString));
+                }
+                updateShare();
+            }
+
+        });
+    }
+
+    /**
      * updates the output text.
      */
     private void updateOutput(){
@@ -360,18 +392,25 @@ public class MainActivity extends AppCompatActivity
                 output.setText(BasicCiphers.morseCode(false, input.getText().toString()));
             }
         } else if ( selectedMenu == R.id.skip ){
-
+            if( decrypt.isChecked() ){
+                output.setText(BasicCiphers.skip(true, Integer.valueOf(spinner.getSelectedItem().toString()) , input.getText().toString()));
+            } else {
+                output.setText(BasicCiphers.skip(false, Integer.valueOf(spinner.getSelectedItem().toString()) , input.getText().toString()));
+            }
         }
         updateShare();
     }
 
     /**
-     * figures out which menu to set up.
+     * figures out which menu to set up and which components are visible and invisible.
      */
     private void setUp(){
 
         if (selectedMenu == R.id.atbash) {
             setUpAtBash();
+            spinner.setVisibility(View.INVISIBLE);
+            decrypt.setVisibility(View.INVISIBLE);
+            encrypt.setVisibility(View.INVISIBLE);
         } else if (selectedMenu == R.id.caesarian_shift) {
             setUpCaesarianShift();
             spinner.setVisibility(View.VISIBLE);
@@ -389,11 +428,13 @@ public class MainActivity extends AppCompatActivity
             setUpRot13();
 
         } else if (selectedMenu == R.id.skip){
-            spinner.setVisibility(View.INVISIBLE);
-            decrypt.setVisibility(View.INVISIBLE);
-            encrypt.setVisibility(View.INVISIBLE);
+            setUpSkip();
+            spinner.setVisibility(View.VISIBLE);
+            decrypt.setVisibility(View.VISIBLE);
+            encrypt.setVisibility(View.VISIBLE);
 
         }
+        updateOutput();
     }
 
 

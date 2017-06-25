@@ -50,7 +50,8 @@
                     android:ems="10"
                     android:hint="Input"
                     android:inputType="textMultiLine"
-                    android:textSize="25sp" />
+                    android:textSize="25sp"
+                    android:typeface="normal" />
 
             </android.support.v7.widget.CardView>
 
